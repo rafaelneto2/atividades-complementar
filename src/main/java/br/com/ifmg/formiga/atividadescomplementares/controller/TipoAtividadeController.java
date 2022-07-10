@@ -7,21 +7,27 @@ import br.com.ifmg.formiga.atividadescomplementares.model.dto.TipoAtividadeDTO;
 import br.com.ifmg.formiga.atividadescomplementares.model.dto.UsuarioDTO;
 import br.com.ifmg.formiga.atividadescomplementares.model.enumeration.TipoUsuario;
 import br.com.ifmg.formiga.atividadescomplementares.repository.TipoAtividadeRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/tipoatividade")
 public class TipoAtividadeController {
 
-    private TipoAtividadeRepository tipoAtividadeRepository;
+    private final TipoAtividadeRepository tipoAtividadeRepository;
 
     public TipoAtividadeController(TipoAtividadeRepository tipoAtividadeRepository) {
         this.tipoAtividadeRepository = tipoAtividadeRepository;
@@ -36,5 +42,21 @@ public class TipoAtividadeController {
         TipoAtividade atividade = new TipoAtividade(dto);
         tipoAtividadeRepository.save(atividade);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TipoAtividadeDTO>> exibeTipoAtividades() {
+        List<TipoAtividade> tipoAtividadeList = tipoAtividadeRepository.findAll();
+        return ResponseEntity.ok(TipoAtividadeDTO.toDto(tipoAtividadeList));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal UsuarioLogado usuarioLogado) {
+        if (usuarioLogado.getUsuario().getTipoUsuario() != TipoUsuario.PROFESSOR) {
+            return ResponseEntity.badRequest().body("Acesso a criação de Tipo de Atividade NEGADO! Por favor, solicite a criação a um professor.");
+        }
+        tipoAtividadeRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

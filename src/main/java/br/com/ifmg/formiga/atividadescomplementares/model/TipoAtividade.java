@@ -18,7 +18,6 @@ public class TipoAtividade {
     @NotBlank
     private String nome;
 
-    @NotBlank
     private String descricao;
 
     public TipoAtividade(TipoAtividadeDTO dto) {
@@ -28,5 +27,13 @@ public class TipoAtividade {
 
     @Deprecated
     public TipoAtividade() {
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 }
