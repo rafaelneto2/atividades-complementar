@@ -2,15 +2,17 @@ package br.com.ifmg.formiga.atividadescomplementares.model.dto;
 
 import br.com.ifmg.formiga.atividadescomplementares.model.Usuario;
 import br.com.ifmg.formiga.atividadescomplementares.model.enumeration.StatusUsuario;
-import br.com.ifmg.formiga.atividadescomplementares.model.enumeration.TipoUsuario;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class UsuarioDTO {
+public class ListaUsuarioDTO {
+
+    @NotNull
+    private Long id;
 
     @NotBlank
     private String nome;
@@ -22,27 +24,22 @@ public class UsuarioDTO {
     @Email
     private String email;
 
-    @NotBlank
-    @Size(min = 6)
-    private String senha;
-
-    @Enumerated(EnumType.STRING)
-    private TipoUsuario tipoUsuario;
-
-    @Enumerated(EnumType.STRING)
     private StatusUsuario statusUsuario;
 
-    public UsuarioDTO(Usuario user) {
+    public ListaUsuarioDTO(Usuario user) {
+        this.id = user.getId();
         this.nome = user.getNome();
         this.registroAcademico = user.getRegistroAcademico();
         this.email = user.getEmail();
-        this.senha = null;
-        this.tipoUsuario = user.getTipoUsuario();
         this.statusUsuario = user.getStatusUsuario();
     }
 
     @Deprecated
-    public UsuarioDTO() {
+    public ListaUsuarioDTO() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getNome() {
@@ -57,15 +54,11 @@ public class UsuarioDTO {
         return email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public TipoUsuario getTipoUsuario() {
-        return tipoUsuario;
-    }
-
     public StatusUsuario getStatusUsuario() {
         return statusUsuario;
+    }
+
+    public static List<ListaUsuarioDTO> toDto(List<Usuario> usuarioList) {
+        return usuarioList.stream().map(ListaUsuarioDTO::new).collect(Collectors.toList());
     }
 }

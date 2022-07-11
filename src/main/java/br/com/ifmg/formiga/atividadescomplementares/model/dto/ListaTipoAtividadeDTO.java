@@ -3,12 +3,15 @@ package br.com.ifmg.formiga.atividadescomplementares.model.dto;
 import br.com.ifmg.formiga.atividadescomplementares.model.TipoAtividade;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TipoAtividadeDTO {
+public class ListaTipoAtividadeDTO {
 
+    @NotNull
+    private Long id;
     @NotBlank
     private String nome;
 
@@ -17,14 +20,19 @@ public class TipoAtividadeDTO {
     @Positive
     private Long limiteHoras;
 
-    public TipoAtividadeDTO(TipoAtividade tipoAtividade) {
+    public ListaTipoAtividadeDTO(TipoAtividade tipoAtividade) {
+        this.id = tipoAtividade.getId();
         this.nome = tipoAtividade.getNome();
         this.descricao = tipoAtividade.getDescricao();
         this.limiteHoras = tipoAtividade.getLimiteHoras();
     }
 
     @Deprecated
-    public TipoAtividadeDTO() {
+    public ListaTipoAtividadeDTO() {
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getNome() {
@@ -39,7 +47,7 @@ public class TipoAtividadeDTO {
         return limiteHoras;
     }
 
-    public static List<TipoAtividadeDTO> toDto(List<TipoAtividade> tipoAtividadeList) {
-        return tipoAtividadeList.stream().map(TipoAtividadeDTO::new).collect(Collectors.toList());
+    public static List<ListaTipoAtividadeDTO> toDto(List<TipoAtividade> tipoAtividadeList) {
+        return tipoAtividadeList.stream().map(ListaTipoAtividadeDTO::new).collect(Collectors.toList());
     }
 }

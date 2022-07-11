@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Entity
 public class TipoAtividade {
@@ -20,13 +21,25 @@ public class TipoAtividade {
 
     private String descricao;
 
+    @Positive
+    private Long limiteHoras;
+
     public TipoAtividade(TipoAtividadeDTO dto) {
         this.nome = dto.getNome();
         this.descricao = dto.getDescricao();
+        this.limiteHoras = dto.getLimiteHoras();
     }
 
     @Deprecated
     public TipoAtividade() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -36,4 +49,9 @@ public class TipoAtividade {
     public String getDescricao() {
         return descricao;
     }
+
+    public Long getLimiteHoras() {
+        return limiteHoras;
+    }
+
 }
